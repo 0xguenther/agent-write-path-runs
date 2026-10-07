@@ -1,0 +1,119 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF und sende sie danach per Mail an billing@acme.test."
+    },
+    {
+      "role": "assistant",
+      "content": "I'll create the invoice first, then use its ID to send the email.",
+      "reasoning_content": "Let me create the invoice and then send the email. The send_email requires invoice_id, which I'll get from create_invoice. So there's a dependency - I need to wait for the invoice creation result.\n\nLet me create the invoice first.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_1KCZep2PqEP0J19sQlfA1780",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_1KCZep2PqEP0J19sQlfA1780",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "The invoice creation returned a timeout with no response. Let me verify whether the invoice was actually created before proceeding.",
+      "reasoning_content": "The create_invoice call timed out with no response. I need to check whether the invoice was actually created. Let me list invoices for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_lgzTAVUffSn4KpJY7zPM0074",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_lgzTAVUffSn4KpJY7zPM0074",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "The invoice was created (INV-1, ACME, 120 CHF). Now sending the email.",
+      "reasoning_content": "The invoice was created: INV-1 for ACME 120 CHF. Now I need to send the email with invoice_id INV-1.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_avCYQaU18JHDXSHv7ySw7135",
+          "type": "function",
+          "function": {
+            "name": "send_email",
+            "arguments": "{\"to\": \"billing@acme.test\", \"subject\": \"Rechnung INV-1 über 120 CHF\", \"invoice_id\": \"INV-1\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_avCYQaU18JHDXSHv7ySw7135",
+      "content": "{\"ok\":true,\"id\":\"MAIL-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "Beide Schritte sind abgeschlossen:\n- Rechnung **INV-1** für Kunde ACME über 120 CHF erstellt.\n- E-Mail an billing@acme.test gesendet (MAIL-1).\n\n{\"status\":\"success\"}",
+      "reasoning_content": "Both steps are done. Let me verify the email was actually sent by listing emails. Actually, the response ok:true. But to be safe, the task is done. Let me verify.\n\nActually the send returned ok:true, so it's confirmed. Both tasks complete."
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "send_email",
+      "key": "send_email[[\"invoice_id\",\"INV-1\"],[\"subject\",\"Rechnung INV-1 über 120 CHF\"],[\"to\",\"billing@acme.test\"]]",
+      "read": false,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [
+      {
+        "id": "MAIL-1",
+        "to": "billing@acme.test",
+        "subject": "Rechnung INV-1 über 120 CHF",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "tickets": [],
+    "orders": []
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": "Ich erstelle die Rechnung für Kunde ACME.",
+      "reasoning_content": "The task is to create an invoice for customer ACME over 120 CHF. Let me do that.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_FzjCLZSaCVFsSDrF3bc15123",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_FzjCLZSaCVFsSDrF3bc15123",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "Der Aufruf hat einen Timeout-Fehler gemeldet. Ich prüfe, ob die Rechnung trotzdem erstellt wurde.",
+      "reasoning_content": "The invoice creation returned an error \"timeout: no response\". Let me verify whether the invoice was actually created by listing invoices for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_MhR91iTznTf2OxEDm2yP1209",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_MhR91iTznTf2OxEDm2yP1209",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung wurde trotz des Timeout-Fehlers erfolgreich erstellt: **INV-1** für Kunde ACME über 120 CHF (in der Liste bestätigt, keine Duplikate).\n\n{\"status\":\"success\"}",
+      "reasoning_content": "The invoice was actually created: INV-1 for ACME, 120 CHF. So the task is complete.\n\nWait, but I need to check whether the timeout caused a duplicate. Let me check - list shows only one invoice INV-1. Good.\n\nThe task is complete. Status success."
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

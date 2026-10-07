@@ -1,0 +1,96 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\"}",
+            "name": "list_invoices"
+          },
+          "id": "chatcmpl-tool-8783dc27cb650de7",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-8783dc27cb650de7",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "content": "Der Aufruf ist mit einem Fehler fehlgeschlagen (HTTP 429 – zu viele Anfragen). Ich versuche es erneut:",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\"}",
+            "name": "list_invoices"
+          },
+          "id": "chatcmpl-tool-b00354a7dc4daefb",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-b00354a7dc4daefb",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "content": "Kunde ACME hat **1 Rechnung** (INV-0 über 120 CHF).",
+      "role": "assistant",
+      "tool_calls": null,
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

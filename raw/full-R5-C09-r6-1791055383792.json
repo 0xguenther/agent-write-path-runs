@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Let me check invoices for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_eaflKeVyjMYZDEXwSgiW5099",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_eaflKeVyjMYZDEXwSgiW5099",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "Der Aufruf schlug mit einem Rate-Limit-Fehler fehl (HTTP 429). Ich versuche es erneut.",
+      "reasoning_content": "The tool returned an error. Let me retry.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_ALhiQ7n3rgF8CgaCsXYl3647",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_ALhiQ7n3rgF8CgaCsXYl3647",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "One invoice for ACME. Let me maybe list all invoices to be sure. Actually the filtered list returned one item. Answer: 1.\n\nHmm, but is the filter reliable? Let me also list without filter to double-check.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_wjtQzWNZ4Sx4J7rSl1dE3738",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_wjtQzWNZ4Sx4J7rSl1dE3738",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Kunde ACME hat **1 Rechnung** (INV-0, 120 CHF). Bestätigt durch die gefilterte Abfrage und die vollständige Rechnungsliste.\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

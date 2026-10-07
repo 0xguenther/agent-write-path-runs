@@ -1,0 +1,148 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is requesting the creation of an invoice for customer ACME for 120 CHF.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "addd5ebb-eaa5-9779-a4a3-cb3fd5293043_0",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\":\"ACME\",\"amount_chf\":120}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is requesting the creation of an invoice for customer ACME for 120 CHF.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "addd5ebb-eaa5-9779-a4a3-cb3fd5293043_0",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The request failed with a 429 error. Let me try again.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "daaedc01-e71e-9bd4-9c1a-033c1be7d3c2_0",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\":\"ACME\",\"amount_chf\":120}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The request failed with a 429 error. Let me try again.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "daaedc01-e71e-9bd4-9c1a-033c1be7d3c2_0",
+      "content": "{\"ok\":true,\"id\":\"INV-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The invoice was successfully created with ID INV-1. Let's verify by listing the invoices.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "2c89478e-ed05-9bb4-9241-012d25961ca3_0",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The invoice was successfully created with ID INV-1. Let's verify by listing the invoices.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "2c89478e-ed05-9bb4-9241-012d25961ca3_0",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Rechnung INV-1 für Kunde ACME über 120 CHF wurde erfolgreich erstellt und bestätigt.\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The invoice has been created and verified: INV-1, customer ACME, 120 CHF.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The invoice has been created and verified: INV-1, customer ACME, 120 CHF.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

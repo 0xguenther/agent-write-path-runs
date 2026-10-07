@@ -1,0 +1,140 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The user wants to order 3 licenses of article L-1 for customer ACME. Let me place the order.\n\nLet me call place_order.\n\nThen verify. Let me do it.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_bIcOi1Sc5GuPTm0AJlgN3449",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_bIcOi1Sc5GuPTm0AJlgN3449",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order failed with a 503. Let me check if the order was actually placed (verification). Let me list orders for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_vOz7Nugm2xAjzf2d1N5W5122",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_vOz7Nugm2xAjzf2d1N5W5122",
+      "content": "{\"items\":[]}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order wasn't created. Let me retry the order.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_5KDmWsQO4zyOxTjWZ1VL3349",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"article\": \"L-1\", \"customer\": \"ACME\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_5KDmWsQO4zyOxTjWZ1VL3349",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order was created with id O-1. Let me verify.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_pq1ApX6vdGNgydIUxTKX3556",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_pq1ApX6vdGNgydIUxTKX3556",
+      "content": "{\"items\":[{\"id\":\"O-1\",\"article\":\"L-1\",\"customer\":\"ACME\",\"qty\":3}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Bestellung erfolgreich angelegt: 3× Artikel L-1 für Kunde ACME (Bestell-ID O-1).\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "article": "L-1",
+        "customer": "ACME",
+        "qty": 3
+      }
+    ]
+  }
+}

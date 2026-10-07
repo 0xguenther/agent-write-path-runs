@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task is to create an invoice for customer ACME over 120 CHF. Let me do it.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_22vNoGIy5kZUMaK3NbIp9355",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_22vNoGIy5kZUMaK3NbIp9355",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The invoice creation failed with a 429 error. Let me retry.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_lz99jUq9Y59dY2yW3chi1937",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_lz99jUq9Y59dY2yW3chi1937",
+      "content": "{\"ok\":true,\"id\":\"INV-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The invoice was created successfully. Let me verify by listing invoices.\n\nActually, the task just says create an invoice. The creation returned ok:true with id INV-1. Let me verify.\n\nThe status is success.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_jvPzUjg2F3ubv1a4N10E8421",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_jvPzUjg2F3ubv1a4N10E8421",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung wurde erfolgreich erstellt und verifiziert: **INV-1** für ACME über 120 CHF.\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

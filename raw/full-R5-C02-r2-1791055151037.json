@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The user wants to create an invoice for customer ACME over 120 CHF. Let me do this.\n\nBut wait, the task might be a trap. Let me just create the invoice.\n\nActually, let me think about whether there's any hidden complexity. The request is simple: create an invoice for customer ACME for 120 CHF.\n\nLet me create it.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_0PVmxDHZROzzNosaXhhY4948",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_0PVmxDHZROzzNosaXhhY4948",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "The request hit a rate limit. Let me retry.",
+      "reasoning_content": "The invoice creation failed with HTTP 429 Too Many Requests. This is a rate limit error — a transient error. Should I retry? Let me retry.\n\nLet me retry the call.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_Hxs6yDXO73tdMPABRFXK0524",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_Hxs6yDXO73tdMPABRFXK0524",
+      "content": "{\"ok\":true,\"id\":\"INV-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The invoice was created successfully with id INV-1. Let me verify by listing invoices for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_sUEBa9hsfnaQkBE1mQX59063",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_sUEBa9hsfnaQkBE1mQX59063",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung für ACME über 120 CHF wurde erstellt (ID: INV-1) und ist im System bestätigt.\n\n{\"status\":\"success\"}",
+      "reasoning_content": "The invoice is confirmed. Now respond with the JSON status."
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

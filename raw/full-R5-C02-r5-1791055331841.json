@@ -1,0 +1,139 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task is simple: create an invoice for customer ACME over 120 CHF. Let me call create_invoice.\n\nI should verify the state afterward by listing invoices. Let me do that.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_8LxSBcEkHWgCz7XrtO8I8016",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_8LxSBcEkHWgCz7XrtO8I8016",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The invoice creation returned an error (429 Too Many Requests). The task was not completed. Let me try again? Rate limiting... maybe retry. But should I retry? The instruction says do the task. Let me try once more.\n\nActually, a 429 is a transient error. Let me retry.\n\nBut careful—if I retry and the first one actually succeeded, I'd create a duplicate. However, the response says error, so it likely didn't create. Let me verify by listing invoices.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_Ko4Y6BV5Xu7yaADQ2J346468",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_Ko4Y6BV5Xu7yaADQ2J346468",
+      "content": "{\"items\":[]}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "No invoices. Let me retry creating.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_SY6w1c9nT0XmUF7CuUVL6355",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_SY6w1c9nT0XmUF7CuUVL6355",
+      "content": "{\"ok\":true,\"id\":\"INV-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Now the invoice was created with id INV-1. Let me verify by listing invoices.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_X1tlFp4iDOXWnrRy9pJ83294",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_X1tlFp4iDOXWnrRy9pJ83294",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung für ACME über 120 CHF wurde erstellt (INV-1) und ist im System bestätigt.\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

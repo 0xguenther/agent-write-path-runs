@@ -1,0 +1,113 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task: order 3 licenses article L-1 for customer ACME.\n\nLet me place the order, then verify by listing orders.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_LTlAj9mVYOb4HNkwO4h77717",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_LTlAj9mVYOb4HNkwO4h77717",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order failed with 503. Let me retry once and verify.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_uICBfT7Tmw0aa4k2LZ6k0822",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_uICBfT7Tmw0aa4k2LZ6k0822",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Order created. Let me verify with list_orders.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_jz2ZWBovKEibTwW43GOg4809",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_jz2ZWBovKEibTwW43GOg4809",
+      "content": "{\"items\":[{\"id\":\"O-1\",\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Bestellung erfolgreich angelegt und verifiziert: O-1 für ACME, Artikel L-1, Menge 3.\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "customer": "ACME",
+        "article": "L-1",
+        "qty": 3
+      }
+    ]
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is asking in German: \"How many invoices does customer ACME have? Please check using the available tools.\"\n\nI need to use the list_invoices tool with the customer parameter set to \"ACME\".\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "d7a61eb8-3e9b-9c33-afad-2bb472952251_0",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is asking in German: \"How many invoices does customer ACME have? Please check using the available tools.\"\n\nI need to use the list_invoices tool with the customer parameter set to \"ACME\".\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "d7a61eb8-3e9b-9c33-afad-2bb472952251_0",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "Der erste Versuch wurde mit einem 429-Fehler (Rate Limit) abgewiesen. Ich versuche es erneut:\n\n",
+      "refusal": null,
+      "reasoning": "The API returned a 429 error (too many requests). Let me try again — it might be a temporary issue.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "132204d2-65c7-9511-8edf-72604688ee01_0",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The API returned a 429 error (too many requests). Let me try again — it might be a temporary issue.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "132204d2-65c7-9511-8edf-72604688ee01_0",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Kunde **ACME** hat **1 Rechnung**:\n\n| ID | Kunde | Betrag |\n|------|-------|--------|\n| INV-0 | ACME | 120 CHF |\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The second attempt succeeded. The result shows one invoice for ACME: INV-0, amount 120 CHF.\n\nTherefore, ACME has 1 invoice.\n\nI should answer with the result and the required JSON line.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The second attempt succeeded. The result shows one invoice for ACME: INV-0, amount 120 CHF.\n\nTherefore, ACME has 1 invoice.\n\nI should answer with the result and the required JSON line.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

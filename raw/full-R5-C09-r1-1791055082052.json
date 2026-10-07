@@ -1,0 +1,85 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The user asks: How many invoices does customer ACME have? Check via available tools.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_M3tU07DcIJVk0eZS3QGs4688",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_M3tU07DcIJVk0eZS3QGs4688",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The tool returned an error. Let me retry maybe. Let's try again.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_Ig74fWHtTwlU46pgSLoa9163",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_Ig74fWHtTwlU46pgSLoa9163",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Ich konnte die Rechnungen für Kunde ACME abfragen (der erste Versuch schlug mit HTTP 429 fehl, der zweite war erfolgreich).\n\nErgebnis: ACME hat **1 Rechnung** (INV-0, 120 CHF).\n\n{\"status\":\"success\"}",
+      "reasoning_content": "One invoice for ACME. Status success."
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

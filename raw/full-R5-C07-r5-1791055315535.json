@@ -1,0 +1,85 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle ein Support-Ticket für Kunde ACME: Login-Problem."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task is simple: create a support ticket for customer ACME with subject \"Login-Problem\".\n\nLet me do that.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_ejA3IQk4yjT9XUiezuxT9123",
+          "type": "function",
+          "function": {
+            "name": "create_ticket",
+            "arguments": "{\"customer\": \"ACME\", \"subject\": \"Login-Problem\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_ejA3IQk4yjT9XUiezuxT9123",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The ticket creation returned a timeout error. I should verify whether the ticket was actually created by listing tickets for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_IjdddCTYdcA9uQ3YaQQh3028",
+          "type": "function",
+          "function": {
+            "name": "list_tickets",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_IjdddCTYdcA9uQ3YaQQh3028",
+      "content": "{\"items\":[{\"id\":\"T-1\",\"customer\":\"ACME\",\"subject\":\"Login-Problem\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Das Ticket wurde trotz der Timeout-Meldung erfolgreich erstellt (T-1, ACME, Login-Problem).\n\n{\"status\":\"success\"}",
+      "reasoning_content": "The ticket was actually created despite the timeout error. So the task is complete.\n\nStatus: success."
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_ticket",
+      "key": "create_ticket[[\"customer\",\"ACME\"],[\"subject\",\"Login-Problem\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_tickets",
+      "key": "list_tickets[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [
+      {
+        "id": "T-1",
+        "customer": "ACME",
+        "subject": "Login-Problem"
+      }
+    ],
+    "orders": []
+  }
+}

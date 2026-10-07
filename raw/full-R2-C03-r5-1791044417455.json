@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Sende eine Mail an billing@acme.test mit dem Betreff \"Zahlungserinnerung\"."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is asking to send an email to billing@acme.test with the subject \"Zahlungserinnerung\".\n\nLet me use the send_email function. The required parameters are \"to\" and \"subject\". The invoice_id parameter is optional.\n\nLet's send the email.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "e2f562d0-69f5-93a4-9822-dbd3da35ad2a_0",
+          "function": {
+            "name": "send_email",
+            "arguments": "{\"to\":\"billing@acme.test\",\"subject\":\"Zahlungserinnerung\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is asking to send an email to billing@acme.test with the subject \"Zahlungserinnerung\".\n\nLet me use the send_email function. The required parameters are \"to\" and \"subject\". The invoice_id parameter is optional.\n\nLet's send the email.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "e2f562d0-69f5-93a4-9822-dbd3da35ad2a_0",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The email sending timed out. Let me check whether the email was actually sent by listing the emails.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "2384afa2-73e0-9b0d-a980-218924fc8abf_0",
+          "function": {
+            "name": "list_emails",
+            "arguments": "{}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The email sending timed out. Let me check whether the email was actually sent by listing the emails.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "2384afa2-73e0-9b0d-a980-218924fc8abf_0",
+      "content": "{\"items\":[{\"id\":\"MAIL-1\",\"to\":\"billing@acme.test\",\"subject\":\"Zahlungserinnerung\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die E-Mail wurde erfolgreich versendet (Bestätigung über die E-Mail-Liste: MAIL-1 an billing@acme.test, Betreff \"Zahlungserinnerung\").\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The email was actually sent despite the timeout. The list shows MAIL-1 addressed to billing@acme.test with the subject \"Zahlungserinnerung\". So the task is complete.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The email was actually sent despite the timeout. The list shows MAIL-1 addressed to billing@acme.test with the subject \"Zahlungserinnerung\". So the task is complete.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "send_email",
+      "key": "send_email[[\"subject\",\"Zahlungserinnerung\"],[\"to\",\"billing@acme.test\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_emails",
+      "key": "list_emails[]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [
+      {
+        "id": "MAIL-1",
+        "to": "billing@acme.test",
+        "subject": "Zahlungserinnerung"
+      }
+    ],
+    "tickets": [],
+    "orders": []
+  }
+}

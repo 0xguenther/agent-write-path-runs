@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle ein Support-Ticket für Kunde ACME: Login-Problem."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is asking to create a support ticket for customer ACME with the subject \"Login-Problem\". Let's use the create_ticket function.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "c706a5f6-c4ed-98bd-9bac-7656acd5ef15_0",
+          "function": {
+            "name": "create_ticket",
+            "arguments": "{\"customer\":\"ACME\",\"subject\":\"Login-Problem\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is asking to create a support ticket for customer ACME with the subject \"Login-Problem\". Let's use the create_ticket function.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "c706a5f6-c4ed-98bd-9bac-7656acd5ef15_0",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The tool call timed out. I'll check the ticket list to see whether the ticket was actually created.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "0f69ebbc-c6c0-90f9-9b72-a0cb62ffb9e0_0",
+          "function": {
+            "name": "list_tickets",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The tool call timed out. I'll check the ticket list to see whether the ticket was actually created.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "0f69ebbc-c6c0-90f9-9b72-a0cb62ffb9e0_0",
+      "content": "{\"items\":[{\"id\":\"T-1\",\"customer\":\"ACME\",\"subject\":\"Login-Problem\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Das Support-Ticket wurde erfolgreich erstellt (T-1 für ACME: „Login-Problem\").\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The ticket was actually created despite the timeout error. Ticket T-1 exists for customer ACME with the subject \"Login-Problem\". The task is complete.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The ticket was actually created despite the timeout error. Ticket T-1 exists for customer ACME with the subject \"Login-Problem\". The task is complete.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_ticket",
+      "key": "create_ticket[[\"customer\",\"ACME\"],[\"subject\",\"Login-Problem\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_tickets",
+      "key": "list_tickets[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [
+      {
+        "id": "T-1",
+        "customer": "ACME",
+        "subject": "Login-Problem"
+      }
+    ],
+    "orders": []
+  }
+}

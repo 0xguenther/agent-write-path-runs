@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is asking how many invoices customer ACME has. I need to check using the available tools. Let me use the list_invoices tool with customer ACME.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "26edc7a0-03b6-9ef2-9e2f-43d21d87f4af_0",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is asking how many invoices customer ACME has. I need to check using the available tools. Let me use the list_invoices tool with customer ACME.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "26edc7a0-03b6-9ef2-9e2f-43d21d87f4af_0",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The tool returned an error: HTTP 429 Too Many Requests. Let me try again.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "a059d278-fe85-9710-9d17-be16e33b32d7_0",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The tool returned an error: HTTP 429 Too Many Requests. Let me try again.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "a059d278-fe85-9710-9d17-be16e33b32d7_0",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Kunde ACME hat **1 Rechnung** (INV-0, 120 CHF).\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The tool returned one invoice for customer ACME: INV-0, amount 120 CHF.\n\nSo ACME has 1 invoice.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The tool returned one invoice for customer ACME: INV-0, amount 120 CHF.\n\nSo ACME has 1 invoice.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

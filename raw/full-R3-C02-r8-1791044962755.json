@@ -1,0 +1,60 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}",
+            "name": "create_invoice"
+          },
+          "id": "chatcmpl-tool-9f380d0372d7c78c",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-9f380d0372d7c78c",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "content": "Leider konnte die Rechnung nicht erstellt werden. Der Versuch scheiterte an einem HTTP 429-Fehler (Too Many Requests), was bedeutet, dass der Dienst vorübergehend zu viele Anfragen erhalten hat.\n\nBitte versuchen Sie es in einigen Sekunden bis Minuten erneut.",
+      "role": "assistant",
+      "tool_calls": null,
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "definitive"
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle ein Support-Ticket für Kunde ACME: Drucker defekt."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is asking to create a support ticket for customer ACME: \"Drucker defekt\" (printer broken).\n\nLet's use the create_ticket function with customer \"ACME\" and subject \"Drucker defekt\".\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "eaaf3070-b259-93f0-b19b-692eabb01c26_0",
+          "function": {
+            "name": "create_ticket",
+            "arguments": "{\"customer\":\"ACME\",\"subject\":\"Drucker defekt\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is asking to create a support ticket for customer ACME: \"Drucker defekt\" (printer broken).\n\nLet's use the create_ticket function with customer \"ACME\" and subject \"Drucker defekt\".\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "eaaf3070-b259-93f0-b19b-692eabb01c26_0",
+      "content": "{\"ticket_id\": \"T-1\", \"status\": "
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The ticket was created with ticket_id \"T-1\". The status field in the response appears to be cut off, but the ticket was created. Let's verify by listing the tickets for ACME.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "de9871f8-8642-9492-a57f-225151fc86b0_0",
+          "function": {
+            "name": "list_tickets",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The ticket was created with ticket_id \"T-1\". The status field in the response appears to be cut off, but the ticket was created. Let's verify by listing the tickets for ACME.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "de9871f8-8642-9492-a57f-225151fc86b0_0",
+      "content": "{\"items\":[{\"id\":\"T-1\",\"customer\":\"ACME\",\"subject\":\"Drucker defekt\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Support-Ticket T-1 für Kunde ACME mit dem Betreff „Drucker defekt\" wurde erfolgreich erstellt und ist in der Ticketliste bestätigt.\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The ticket T-1 for ACME with the subject \"Drucker defekt\" has been confirmed. The task is complete.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The ticket T-1 for ACME with the subject \"Drucker defekt\" has been confirmed. The task is complete.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_ticket",
+      "key": "create_ticket[[\"customer\",\"ACME\"],[\"subject\",\"Drucker defekt\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_tickets",
+      "key": "list_tickets[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [
+      {
+        "id": "T-1",
+        "customer": "ACME",
+        "subject": "Drucker defekt"
+      }
+    ],
+    "orders": []
+  }
+}

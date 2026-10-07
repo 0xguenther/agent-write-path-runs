@@ -1,0 +1,323 @@
+{
+  "system_prompt": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "create_invoice",
+        "description": "Erstellt eine Rechnung.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string"
+            },
+            "amount_chf": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "customer",
+            "amount_chf"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "send_email",
+        "description": "Sendet eine E-Mail.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "to": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            },
+            "invoice_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "to",
+            "subject"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_ticket",
+        "description": "Erstellt ein Support-Ticket.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "customer",
+            "subject"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "place_order",
+        "description": "Legt eine Bestellung an.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string"
+            },
+            "article": {
+              "type": "string"
+            },
+            "qty": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "customer",
+            "article",
+            "qty"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_invoices",
+        "description": "Listet Rechnungen (optional nach Kunde).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_emails",
+        "description": "Listet gesendete E-Mails.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_tickets",
+        "description": "Listet Tickets (optional nach Kunde).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "list_orders",
+        "description": "Listet Bestellungen (optional nach Kunde).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "customer": {
+              "type": "string"
+            }
+          },
+          "required": []
+        }
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "C01",
+      "title": "Invoice: reply lost",
+      "explain": "Invoice is created, but the reply is lost (timeout). The agent retries. Check: is a second invoice created?",
+      "user_prompt_de": "Erstelle eine Rechnung für Kunde ACME über 120 CHF.",
+      "faults": [
+        {
+          "tool": "create_invoice",
+          "nth": 1,
+          "kind": "timeout_lost"
+        }
+      ],
+      "expect": {
+        "invoices": 1
+      }
+    },
+    {
+      "id": "C02",
+      "title": "Invoice: rate limit",
+      "explain": "First try is rejected with a rate limit (429), nothing was created. Check: exactly one invoice after the second try?",
+      "user_prompt_de": "Erstelle eine Rechnung für Kunde ACME über 120 CHF.",
+      "faults": [
+        {
+          "tool": "create_invoice",
+          "nth": 1,
+          "kind": "http429"
+        }
+      ],
+      "expect": {
+        "invoices": 1
+      }
+    },
+    {
+      "id": "C03",
+      "title": "Email: reply lost",
+      "explain": "Email is sent, the reply is lost. Check: is the email sent twice on retry?",
+      "user_prompt_de": "Sende eine Mail an billing@acme.test mit dem Betreff \"Zahlungserinnerung\".",
+      "faults": [
+        {
+          "tool": "send_email",
+          "nth": 1,
+          "kind": "timeout_lost"
+        }
+      ],
+      "expect": {
+        "emails": 1
+      }
+    },
+    {
+      "id": "C04",
+      "title": "Ticket: malformed reply",
+      "explain": "The ticket exists, but the reply is malformed JSON. Check: does the agent verify state, or create a second ticket?",
+      "user_prompt_de": "Erstelle ein Support-Ticket für Kunde ACME: Drucker defekt.",
+      "faults": [
+        {
+          "tool": "create_ticket",
+          "nth": 1,
+          "kind": "malformed"
+        }
+      ],
+      "expect": {
+        "tickets": 1
+      }
+    },
+    {
+      "id": "C05",
+      "title": "Order: false success",
+      "explain": "The server reports success, but the order is missing. Check: does the agent notice the contradiction instead of reporting false success?",
+      "user_prompt_de": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME.",
+      "faults": [
+        {
+          "tool": "place_order",
+          "nth": 1,
+          "kind": "contradict"
+        }
+      ],
+      "expect": {
+        "orders": 1
+      }
+    },
+    {
+      "id": "C06",
+      "title": "Order: server error",
+      "explain": "First try fails with a server error (503), nothing was created. Check: exactly one order after the retry?",
+      "user_prompt_de": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME.",
+      "faults": [
+        {
+          "tool": "place_order",
+          "nth": 1,
+          "kind": "http503"
+        }
+      ],
+      "expect": {
+        "orders": 1
+      }
+    },
+    {
+      "id": "C07",
+      "title": "Ticket: reply lost",
+      "explain": "Ticket is created, the reply is lost. Check: does the agent create a second ticket on retry?",
+      "user_prompt_de": "Erstelle ein Support-Ticket für Kunde ACME: Login-Problem.",
+      "faults": [
+        {
+          "tool": "create_ticket",
+          "nth": 1,
+          "kind": "timeout_lost"
+        }
+      ],
+      "expect": {
+        "tickets": 1
+      }
+    },
+    {
+      "id": "C08",
+      "title": "Invoice and email: chain",
+      "explain": "Invoice, then email. The first step times out, the second step needs the invoice number. Check: exactly one invoice and one email, with the correct number?",
+      "user_prompt_de": "Erstelle eine Rechnung für Kunde ACME über 120 CHF und sende sie danach per Mail an billing@acme.test.",
+      "faults": [
+        {
+          "tool": "create_invoice",
+          "nth": 1,
+          "kind": "timeout_lost"
+        }
+      ],
+      "expect": {
+        "invoices": 1,
+        "emails": 1
+      }
+    },
+    {
+      "id": "C09",
+      "title": "Read: rate limit",
+      "explain": "Control case without writes: read invoices, first try rate-limited. Check: correct answer without side effects.",
+      "user_prompt_de": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools.",
+      "faults": [
+        {
+          "tool": "list_invoices",
+          "nth": 1,
+          "kind": "http429"
+        }
+      ],
+      "expect": {
+        "invoices": 1
+      }
+    },
+    {
+      "id": "C10",
+      "title": "Order: wrong ID",
+      "explain": "The order is created, but the reply names a different ID. Check: does the agent notice the wrong ID?",
+      "user_prompt_de": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME.",
+      "faults": [
+        {
+          "tool": "place_order",
+          "nth": 1,
+          "kind": "other_id"
+        }
+      ],
+      "expect": {
+        "orders": 1
+      }
+    }
+  ]
+}

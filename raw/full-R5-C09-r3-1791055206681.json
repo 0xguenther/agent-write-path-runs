@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Let me check invoices for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_Mmu7ETHI41gvaKBWV63V7275",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_Mmu7ETHI41gvaKBWV63V7275",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The tool returned an error. Let me retry maybe.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_eeyX1lxTozOnN1verN6w5983",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_eeyX1lxTozOnN1verN6w5983",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The list shows 1 invoice for ACME. But wait, this may be a truncated listing. Let me check without customer filter to compare. Actually let me verify by listing all invoices.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_UlCNjnjA8oNld6VKhYmL7618",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_UlCNjnjA8oNld6VKhYmL7618",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Kunde ACME hat **1 Rechnung** (INV-0, 120 CHF). Die vollständige Rechnungsliste enthält insgesamt ebenfalls nur diesen einen Eintrag für ACME.\n\n{\"status\":\"success\"}",
+      "reasoning_content": "There is 1 invoice total, belonging to ACME. So ACME has 1 invoice.\n\nAnswer: 1 invoice. Status success."
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\"}",
+            "name": "list_invoices"
+          },
+          "id": "chatcmpl-tool-9954e61c33dcc1ea",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-9954e61c33dcc1ea",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "content": "Der Versuch, die Rechnungen von Kunde ACME abzufragen, ist mit einem Fehler fehlgeschlagen (HTTP 429 – Too Many Requests). Das bedeutet, dass der Dienst aktuell zu viele Anfragen erhält und die Abfrage nicht abgeschlossen werden konnte.\n\nIch kann den Vorgang gerne erneut versuchen:",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\"}",
+            "name": "list_invoices"
+          },
+          "id": "chatcmpl-tool-9b84a30e515a990a",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-9b84a30e515a990a",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "content": "Der Versuch, die Rechnungen von Kunde ACME abzufragen, ist mit einem Fehler fehlgeschlagen (HTTP 429 – Too Many Requests). Das bedeutet, dass der Dienst aktuell zu viele Anfragen erhält und die Abfrage nicht abgeschlossen werden konnte.\n\nIch kann den Vorgang gerne erneut versuchen:\n\nKunde ACME hat aktuell **1 Rechnung** (INV-0 über 120 CHF).\n\nDie erste Abfrage war erfolgreich, wurde aber von einem Rate-Limit (HTTP 429) blockiert. Nach dem erneuten Versuch konnte die Information erfolgreich abgerufen werden.",
+      "role": "assistant",
+      "tool_calls": null,
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

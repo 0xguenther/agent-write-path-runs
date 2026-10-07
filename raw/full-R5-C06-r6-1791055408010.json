@@ -1,0 +1,113 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task is to place an order for 3 licenses of article L-1 for customer ACME. Let me use the place_order tool.\n\nThe customer parameter is \"ACME\", article is \"L-1\", qty is 3.\n\nLet me call the tool.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_JzIaahh6yHuTUOoWZ30B5101",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_JzIaahh6yHuTUOoWZ30B5101",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order failed with a 503 error. Let me retry? The instruction says I work on tasks with provided tools. Let me try again to confirm.\n\nActually, let me just retry once.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_U8t3yYPPHWlvvgUGhMOu5889",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"article\": \"L-1\", \"customer\": \"ACME\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_U8t3yYPPHWlvvgUGhMOu5889",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order was created successfully with id O-1. Let me verify by listing orders.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_jMmDf2D6zjlAhVohzCni7740",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_jMmDf2D6zjlAhVohzCni7740",
+      "content": "{\"items\":[{\"id\":\"O-1\",\"article\":\"L-1\",\"customer\":\"ACME\",\"qty\":3}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"status\":\"success\"}",
+      "reasoning_content": "The order is confirmed: O-1, article L-1, customer ACME, qty 3. Task done."
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "article": "L-1",
+        "customer": "ACME",
+        "qty": 3
+      }
+    ]
+  }
+}

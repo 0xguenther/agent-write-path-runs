@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task: create an invoice for customer ACME over 120 CHF. Simple. Then verify? Let me just call create_invoice.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_VI0gwEukqYteTHoJxZ259854",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_VI0gwEukqYteTHoJxZ259854",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The tool call failed with 429. Retry? Let's retry.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_PMR4KqzJfgd7M2hSCXNP0331",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"amount_chf\": 120, \"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_PMR4KqzJfgd7M2hSCXNP0331",
+      "content": "{\"ok\":true,\"id\":\"INV-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Now verify by listing invoices.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_dbcMlBTZ6T9WSgd3yWK94244",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_dbcMlBTZ6T9WSgd3yWK94244",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"amount_chf\":120,\"customer\":\"ACME\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung wurde erfolgreich erstellt und verifiziert.\n\n```json\n{\"status\":\"success\"}\n```",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "amount_chf": 120,
+        "customer": "ACME"
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task: create an invoice for customer ACME over 120 CHF. Let me just do it.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_yEJT2cpW7cLgC5AdlAIs3881",
+          "type": "function",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_yEJT2cpW7cLgC5AdlAIs3881",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The tool call timed out. Let me verify state by listing invoices for ACME.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_2Q5fTNYnO3QNgLDkDD1b2438",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_2Q5fTNYnO3QNgLDkDD1b2438",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung wurde trotz Timeout-Fehlermeldung tatsächlich angelegt (INV-1, ACME, 120 CHF) und durch Abfrage bestätigt.\n\n{\"status\":\"success\"}",
+      "reasoning_content": "The invoice was actually created (INV-1, ACME, 120 CHF) despite the timeout response. So status success.\n\nBut wait—could there be duplicates? Only one item. Good.\n\nStatus: success."
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

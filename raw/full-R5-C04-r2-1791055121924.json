@@ -1,0 +1,85 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle ein Support-Ticket für Kunde ACME: Drucker defekt."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Simple task: create ticket for customer ACME with subject \"Drucker defekt\". Then verify with list_tickets.\n\nThese are dependent? Creating then listing. I can create first.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_YttbUgw3aNmTuX9AgaP99618",
+          "type": "function",
+          "function": {
+            "name": "create_ticket",
+            "arguments": "{\"customer\": \"ACME\", \"subject\": \"Drucker defekt\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_YttbUgw3aNmTuX9AgaP99618",
+      "content": "{\"ticket_id\": \"T-1\", \"status\": "
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Now verify with list_tickets.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_GUhRO8mWCMjeUN8ssi0h7713",
+          "type": "function",
+          "function": {
+            "name": "list_tickets",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_GUhRO8mWCMjeUN8ssi0h7713",
+      "content": "{\"items\":[{\"id\":\"T-1\",\"customer\":\"ACME\",\"subject\":\"Drucker defekt\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "The ticket was created successfully and verified.\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_ticket",
+      "key": "create_ticket[[\"customer\",\"ACME\"],[\"subject\",\"Drucker defekt\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_tickets",
+      "key": "list_tickets[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [
+      {
+        "id": "T-1",
+        "customer": "ACME",
+        "subject": "Drucker defekt"
+      }
+    ],
+    "orders": []
+  }
+}

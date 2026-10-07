@@ -1,0 +1,140 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": "I'll place the order for you.",
+      "reasoning_content": "The task is to order 3 licenses of article L-1 for customer ACME. I should call place_order. Then verify by listing orders.\n\nLet me make the call.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_rkSuZ2N9GN8ZXinW8Uuo7132",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_rkSuZ2N9GN8ZXinW8Uuo7132",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "The order request returned a service error. Let me verify whether it went through and retry if needed.",
+      "reasoning_content": "The order failed with HTTP 503. Let me check if the order was created anyway by listing orders. Maybe I should retry. Let me first list orders to verify the state.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_nIHPBU7ihFQ0GKJWhYlh0387",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_nIHPBU7ihFQ0GKJWhYlh0387",
+      "content": "{\"items\":[]}"
+    },
+    {
+      "role": "assistant",
+      "content": "No order was recorded. Retrying the order now.",
+      "reasoning_content": "No orders exist. Let me retry the order.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_c1UVB6aBIhyU9RAaGLnH6309",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"article\": \"L-1\", \"customer\": \"ACME\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_c1UVB6aBIhyU9RAaGLnH6309",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "The order succeeded. Let me verify it's recorded.",
+      "reasoning_content": "The order succeeded with id O-1. Let me verify by listing orders.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_k8Pi24fhSJrLxSwSFbAJ5580",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_k8Pi24fhSJrLxSwSFbAJ5580",
+      "content": "{\"items\":[{\"id\":\"O-1\",\"article\":\"L-1\",\"customer\":\"ACME\",\"qty\":3}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "The order is confirmed: 3 units of article L-1 for customer ACME (order O-1).\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "article": "L-1",
+        "customer": "ACME",
+        "qty": 3
+      }
+    ]
+  }
+}

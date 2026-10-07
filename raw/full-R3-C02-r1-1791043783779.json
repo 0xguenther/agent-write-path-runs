@@ -1,0 +1,96 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}",
+            "name": "create_invoice"
+          },
+          "id": "chatcmpl-tool-bd736d6f7bbc39e4",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-bd736d6f7bbc39e4",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "content": "Der Versuch, eine Rechnung für ACME über 120 CHF zu erstellen, ist mit einem HTTP 429 (Too Many Requests) Fehler fehlgeschlagen. Das bedeutet, dass zu viele Anfragen in kurzer Zeit gesendet wurden.\n\nIch versuche es erneut:",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\", \"amount_chf\": 120}",
+            "name": "create_invoice"
+          },
+          "id": "chatcmpl-tool-a438597186de8ff2",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-a438597186de8ff2",
+      "content": "{\"ok\":true,\"id\":\"INV-1\"}"
+    },
+    {
+      "content": "Die Rechnung wurde erfolgreich erstellt:\n\n- **Rechnungs-ID:** INV-1\n- **Kunde:** ACME\n- **Betrag:** 120 CHF\n\nDie erste Anfrage wurde durch ein Rate-Limit (HTTP 429) blockiert, der zweite Versuch war jedoch erfolgreich.\n\n{\"status\":\"success\"}",
+      "role": "assistant",
+      "tool_calls": null,
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

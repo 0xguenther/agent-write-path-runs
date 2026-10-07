@@ -1,0 +1,49 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "toolu_013Be3EaBQYmXfPDo8rVzsRp",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "toolu_013Be3EaBQYmXfPDo8rVzsRp",
+      "content": "{\"ok\":true,\"order_id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Bestellung wurde erfolgreich erstellt:\n- **Bestellnummer**: O-1\n- **Kunde**: ACME\n- **Artikel**: L-1\n- **Menge**: 3 Lizenzen\n\n{\"status\":\"success\"}"
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

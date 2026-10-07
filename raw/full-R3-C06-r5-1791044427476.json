@@ -1,0 +1,97 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}",
+            "name": "place_order"
+          },
+          "id": "chatcmpl-tool-bc579d76a2365d62",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-bc579d76a2365d62",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "content": "Der Auftrag konnte nicht abgeschlossen werden. Der Versuch, 3 Lizenzen des Artikels L-1 für Kunde ACME zu bestellen, scheiterte mit einem HTTP-503-Fehler (Service Unavailable).\n\nIch werde es erneut versuchen:",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"article\": \"L-1\", \"customer\": \"ACME\", \"qty\": 3}",
+            "name": "place_order"
+          },
+          "id": "chatcmpl-tool-a29a09b25f8f4f43",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-a29a09b25f8f4f43",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "content": "Bestellt! Die Bestellung **O-1** wurde erfolgreich aufgegeben.",
+      "role": "assistant",
+      "tool_calls": null,
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "article": "L-1",
+        "customer": "ACME",
+        "qty": 3
+      }
+    ]
+  }
+}

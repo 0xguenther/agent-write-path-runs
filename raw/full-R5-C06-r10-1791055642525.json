@@ -1,0 +1,140 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The task is to place an order for 3 licenses of article L-1 for customer ACME. Simple, single tool call.\n\nLet me place the order.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_IffoRhL45haGY7TeiVar5019",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_IffoRhL45haGY7TeiVar5019",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order failed with a 503 error. Let me retry? Actually, let me check if maybe it went through. Let me retry once.\n\nActually, I should verify. Let me list orders for ACME to see if it was created.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_PEFojnzAdhLXikirApBr3048",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_PEFojnzAdhLXikirApBr3048",
+      "content": "{\"items\":[]}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "No order was created. Let me retry placing the order.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_44YLwOYM5IX3NXjACdos3388",
+          "type": "function",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_44YLwOYM5IX3NXjACdos3388",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "The order succeeded with ID O-1. Let me verify by listing orders.\n\nActually the response confirms ok. Let me quickly verify.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_4NvKGCcd4LtAzssnyWnO6409",
+          "type": "function",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_4NvKGCcd4LtAzssnyWnO6409",
+      "content": "{\"items\":[{\"id\":\"O-1\",\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Bestellung wurde erfolgreich angelegt: 3 Lizenzen des Artikels L-1 für Kunde ACME (Bestell-ID O-1).\n\n{\"status\":\"success\"}",
+      "reasoning_content": ""
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "customer": "ACME",
+        "article": "L-1",
+        "qty": 3
+      }
+    ]
+  }
+}

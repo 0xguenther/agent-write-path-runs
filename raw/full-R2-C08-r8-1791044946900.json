@@ -1,0 +1,191 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF und sende sie danach per Mail an billing@acme.test."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is asking to create an invoice for customer ACME for 120 CHF, and then send it by email to billing@acme.test.\n\nFirst, I need to create the invoice. After that, I need to send the email. The email might need the invoice_id, which I'll get from the result of creating the invoice.\n\nLet's start by creating the invoice first.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "fd39c691-4647-914c-a95a-011d85ef6aa1_0",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\":\"ACME\",\"amount_chf\":120}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is asking to create an invoice for customer ACME for 120 CHF, and then send it by email to billing@acme.test.\n\nFirst, I need to create the invoice. After that, I need to send the email. The email might need the invoice_id, which I'll get from the result of creating the invoice.\n\nLet's start by creating the invoice first.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "fd39c691-4647-914c-a95a-011d85ef6aa1_0",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnungserstellung hat mit einem Timeout geantwortet. Ich prüfe, ob die Rechnung trotzdem angelegt wurde.\n\n",
+      "refusal": null,
+      "reasoning": "The invoice creation timed out. Let me check whether the invoice was actually created by listing the invoices for ACME.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "c721e97c-f500-93d7-8597-d7330812cc21_0",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The invoice creation timed out. Let me check whether the invoice was actually created by listing the invoices for ACME.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "c721e97c-f500-93d7-8597-d7330812cc21_0",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung INV-1 wurde trotz Timeout erfolgreich angelegt. Jetzt sende ich sie per E-Mail.\n\n",
+      "refusal": null,
+      "reasoning": "The invoice was actually created despite the timeout: INV-1, customer ACME, 120 CHF. Next, I need to send an email to billing@acme.test with the invoice_id attached.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "ef25895c-9da9-9524-a400-d6e8f676fb4a_0",
+          "function": {
+            "name": "send_email",
+            "arguments": "{\"to\":\"billing@acme.test\",\"subject\":\"Rechnung INV-1 für ACME\",\"invoice_id\":\"INV-1\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The invoice was actually created despite the timeout: INV-1, customer ACME, 120 CHF. Next, I need to send an email to billing@acme.test with the invoice_id attached.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "ef25895c-9da9-9524-a400-d6e8f676fb4a_0",
+      "content": "{\"ok\":true,\"id\":\"MAIL-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The email was sent successfully (MAIL-1). Let's check whether it's included in the email list.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "691ae5c8-6fed-99b5-8f07-8c633aee3b60_0",
+          "function": {
+            "name": "list_emails",
+            "arguments": "{}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The email was sent successfully (MAIL-1). Let's check whether it's included in the email list.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "691ae5c8-6fed-99b5-8f07-8c633aee3b60_0",
+      "content": "{\"items\":[{\"id\":\"MAIL-1\",\"to\":\"billing@acme.test\",\"subject\":\"Rechnung INV-1 für ACME\",\"invoice_id\":\"INV-1\"}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Erledigt: Rechnung INV-1 (ACME, 120 CHF) wurde erstellt und per E-Mail (MAIL-1) an billing@acme.test versendet – beides über die Listen bestätigt.\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "Both steps have been completed and verified:\n1. Invoice INV-1 for ACME, 120 CHF — confirmed via list_invoices\n2. Email MAIL-1 sent to billing@acme.test with invoice_id INV-1 attached — confirmed via list_emails\n\nThe task is complete.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "Both steps have been completed and verified:\n1. Invoice INV-1 for ACME, 120 CHF — confirmed via list_invoices\n2. Email MAIL-1 sent to billing@acme.test with invoice_id INV-1 attached — confirmed via list_emails\n\nThe task is complete.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "send_email",
+      "key": "send_email[[\"invoice_id\",\"INV-1\"],[\"subject\",\"Rechnung INV-1 für ACME\"],[\"to\",\"billing@acme.test\"]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_emails",
+      "key": "list_emails[]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [
+      {
+        "id": "MAIL-1",
+        "to": "billing@acme.test",
+        "subject": "Rechnung INV-1 für ACME",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "tickets": [],
+    "orders": []
+  }
+}

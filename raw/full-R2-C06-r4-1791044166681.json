@@ -1,0 +1,185 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is requesting to place an order for 3 licenses of item L-1 for customer ACME.\n\nLet's use the place_order function.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "0c7b79ac-8bb9-9267-81d8-aa5904d48105_0",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is requesting to place an order for 3 licenses of item L-1 for customer ACME.\n\nLet's use the place_order function.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "0c7b79ac-8bb9-9267-81d8-aa5904d48105_0",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The order placement failed with an HTTP 503 error. Let me check whether the order was actually placed by listing the orders for ACME.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "af019cf5-38b3-9430-8aac-7ed56321f471_0",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The order placement failed with an HTTP 503 error. Let me check whether the order was actually placed by listing the orders for ACME.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "af019cf5-38b3-9430-8aac-7ed56321f471_0",
+      "content": "{\"items\":[]}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The order was not placed. The service returned a 503 error, and the order list for ACME is empty. Let me try again — it might be a temporary error.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "6953a395-ac22-9ae5-a14d-9b9f6b4f7378_0",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The order was not placed. The service returned a 503 error, and the order list for ACME is empty. Let me try again — it might be a temporary error.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "6953a395-ac22-9ae5-a14d-9b9f6b4f7378_0",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The retry succeeded. The order was created with ID O-1. Let's check the order list to confirm.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "4b4d59b2-4867-9e93-af7f-e32ee3d45f5a_0",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The retry succeeded. The order was created with ID O-1. Let's check the order list to confirm.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "4b4d59b2-4867-9e93-af7f-e32ee3d45f5a_0",
+      "content": "{\"items\":[{\"id\":\"O-1\",\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Bestellung wurde erfolgreich platziert: Bestellung O-1 für Kunde ACME, Artikel L-1, Menge 3. (Erster Versuch schlug mit HTTP 503 fehl, der erneute Versuch war erfolgreich und wurde über die Bestellliste verifiziert.)\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The order has been confirmed: O-1, customer ACME, item L-1, quantity 3. The task is complete.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The order has been confirmed: O-1, customer ACME, item L-1, quantity 3. The task is complete.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "customer": "ACME",
+        "article": "L-1",
+        "qty": 3
+      }
+    ]
+  }
+}

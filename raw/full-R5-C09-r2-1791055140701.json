@@ -1,0 +1,85 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Wie viele Rechnungen hat Kunde ACME? Prüfe das über die verfügbaren Tools."
+    },
+    {
+      "role": "assistant",
+      "content": "I'll check the invoices for ACME.",
+      "reasoning_content": "",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_ET_OnmE3IAQn8adKcReq0dt3101",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_ET_OnmE3IAQn8adKcReq0dt3101",
+      "content": "{\"error\":\"HTTP 429 Too Many Requests\"}"
+    },
+    {
+      "role": "assistant",
+      "content": "The tool returned a rate-limit error (HTTP 429). Let me retry.",
+      "reasoning_content": "The tool returned an error. Let me retry maybe once.\n\nThe rate limit error means I couldn't verify. Let me try again.",
+      "tool_calls": [
+        {
+          "index": 0,
+          "id": "call_00_Jgpm8bU7SbEAECnocfqc7116",
+          "type": "function",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\": \"ACME\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_00_Jgpm8bU7SbEAECnocfqc7116",
+      "content": "{\"items\":[{\"id\":\"INV-0\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Der Kunde ACME hat **1 Rechnung** (INV-0, 120 CHF). Dies konnte über das Tool `list_invoices` mit dem Filter „ACME\" bestätigt werden (der erste Aufruf schlug wegen eines Rate-Limits fehl, der zweite war erfolgreich).\n\n{\"status\":\"success\"}",
+      "reasoning_content": "Now I got the result: 1 invoice for ACME. Let me verify by listing all invoices maybe. The customer filter returned one item.\n\nShould I also list all invoices to double-check? The task is: how many invoices does ACME have. Answer: 1. Verified.\n\nI'll respond with JSON success."
+    }
+  ],
+  "log": [
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-0",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

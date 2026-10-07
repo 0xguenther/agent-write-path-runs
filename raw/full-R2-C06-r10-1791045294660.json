@@ -1,0 +1,185 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is requesting to order 3 licenses of item L-1 for customer ACME.\n\nI'll use the place_order function with the following parameters:\n- customer: \"ACME\"\n- article: \"L-1\"\n- qty: 3\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "e4ab1afa-fd66-9456-9352-1c6fbb7894d4_0",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is requesting to order 3 licenses of item L-1 for customer ACME.\n\nI'll use the place_order function with the following parameters:\n- customer: \"ACME\"\n- article: \"L-1\"\n- qty: 3\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "e4ab1afa-fd66-9456-9352-1c6fbb7894d4_0",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The order failed with an HTTP 503 error. Let me check whether the order was actually created by listing the orders for ACME.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "b07d1ce4-d87d-9a31-9a9e-dcb61a4e0530_0",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The order failed with an HTTP 503 error. Let me check whether the order was actually created by listing the orders for ACME.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "b07d1ce4-d87d-9a31-9a9e-dcb61a4e0530_0",
+      "content": "{\"items\":[]}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The order was not created. The service returned a 503 error, and the order list for ACME is empty. Should I retry the order?\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "041de8bc-a625-95ab-86c8-8fa52c0a924a_0",
+          "function": {
+            "name": "place_order",
+            "arguments": "{\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The order was not created. The service returned a 503 error, and the order list for ACME is empty. Should I retry the order?\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "041de8bc-a625-95ab-86c8-8fa52c0a924a_0",
+      "content": "{\"ok\":true,\"id\":\"O-1\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The retry succeeded. Order O-1 was created. Let's check whether it's included in the order list.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "2807674d-19e8-9bc5-a813-defe804fbf96_0",
+          "function": {
+            "name": "list_orders",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The retry succeeded. Order O-1 was created. Let's check whether it's included in the order list.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "2807674d-19e8-9bc5-a813-defe804fbf96_0",
+      "content": "{\"items\":[{\"id\":\"O-1\",\"customer\":\"ACME\",\"article\":\"L-1\",\"qty\":3}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Bestellung wurde erfolgreich aufgegeben und bestätigt: Bestellung O-1 für Kunde ACME, Artikel L-1, Menge 3.\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The order has been confirmed: O-1, customer ACME, item L-1, quantity 3. The task is complete.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The order has been confirmed: O-1, customer ACME, item L-1, quantity 3. The task is complete.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    },
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": null
+    },
+    {
+      "tool": "list_orders",
+      "key": "list_orders[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": [
+      {
+        "id": "O-1",
+        "customer": "ACME",
+        "article": "L-1",
+        "qty": 3
+      }
+    ]
+  }
+}

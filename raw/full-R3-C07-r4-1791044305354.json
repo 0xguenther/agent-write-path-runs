@@ -1,0 +1,101 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle ein Support-Ticket für Kunde ACME: Login-Problem."
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\", \"subject\": \"Login-Problem\"}",
+            "name": "create_ticket"
+          },
+          "id": "chatcmpl-tool-9530354b90934763",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-9530354b90934763",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "content": "Der Versuch, das Support-Ticket zu erstellen, hat einen Timeoutfehler verursacht. Ich versuche es erneut.",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\", \"subject\": \"Login-Problem\"}",
+            "name": "create_ticket"
+          },
+          "id": "chatcmpl-tool-a93bd948fdb5a87f",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-a93bd948fdb5a87f",
+      "content": "{\"ok\":true,\"id\":\"T-2\"}"
+    },
+    {
+      "content": "Das Support-Ticket für Kunde ACME wurde erfolgreich erstellt (ID: T-2) mit dem Betreff \"Login-Problem\".\n\n{\"status\":\"success\"}",
+      "role": "assistant",
+      "tool_calls": null,
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_ticket",
+      "key": "create_ticket[[\"customer\",\"ACME\"],[\"subject\",\"Login-Problem\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "create_ticket",
+      "key": "create_ticket[[\"customer\",\"ACME\"],[\"subject\",\"Login-Problem\"]]",
+      "read": false,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [
+      {
+        "id": "T-1",
+        "customer": "ACME",
+        "subject": "Login-Problem"
+      },
+      {
+        "id": "T-2",
+        "customer": "ACME",
+        "subject": "Login-Problem"
+      }
+    ],
+    "orders": []
+  }
+}

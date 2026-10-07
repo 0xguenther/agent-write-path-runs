@@ -1,0 +1,60 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Bestelle 3 Lizenzen Artikel L-1 für Kunde ACME."
+    },
+    {
+      "content": null,
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"customer\": \"ACME\", \"article\": \"L-1\", \"qty\": 3}",
+            "name": "place_order"
+          },
+          "id": "chatcmpl-tool-85bd497c67b4ec2f",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-85bd497c67b4ec2f",
+      "content": "{\"error\":\"HTTP 503 Service Unavailable\"}"
+    },
+    {
+      "content": "Der Auftrag konnte leider nicht abgeschlossen werden. Beim Anlegen der Bestellung für 3 Lizenzen (Artikel L-1) für Kunde ACME ist ein Fehler aufgetreten:\n\n**HTTP 503 Service Unavailable**\n\nDies deutet darauf hin, dass der Dienst vorübergehend nicht verfügbar ist. Bitte versuchen Sie es später erneut, oder melden Sie das Problem, falls es weiterhin besteht.\n\n```json\n{\"status\":\"failure\"}\n</parameter>\n</function>\n</tool_call>",
+      "role": "assistant",
+      "tool_calls": null,
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "log": [
+    {
+      "tool": "place_order",
+      "key": "place_order[[\"article\",\"L-1\"],[\"customer\",\"ACME\"],[\"qty\",3]]",
+      "read": false,
+      "error": "definitive"
+    }
+  ],
+  "mock_state": {
+    "invoices": [],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}

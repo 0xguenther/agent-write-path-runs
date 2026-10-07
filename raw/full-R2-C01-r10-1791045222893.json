@@ -1,0 +1,112 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bearbeitest Aufträge mit den bereitgestellten Tools. Antworte am Ende mit genau einer Zeile JSON: {\"status\":\"success\"} wenn der Auftrag erledigt ist, {\"status\":\"failure\"} wenn nicht, {\"status\":\"unverified\"} wenn du den Zustand nicht bestätigen konntest."
+    },
+    {
+      "role": "user",
+      "content": "Erstelle eine Rechnung für Kunde ACME über 120 CHF."
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The user is asking to create an invoice for customer ACME for 120 CHF. Let's use the create_invoice function.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "ed5ded88-180f-914c-a691-3e17b0387715_0",
+          "function": {
+            "name": "create_invoice",
+            "arguments": "{\"customer\":\"ACME\",\"amount_chf\":120}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The user is asking to create an invoice for customer ACME for 120 CHF. Let's use the create_invoice function.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "ed5ded88-180f-914c-a691-3e17b0387715_0",
+      "content": "{\"error\":\"timeout: no response\"}"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "refusal": null,
+      "reasoning": "The tool call timed out. Let me check whether the invoice was actually created by listing the invoices for ACME.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "8332d785-5311-9644-b7d3-9f454c4490bf_0",
+          "function": {
+            "name": "list_invoices",
+            "arguments": "{\"customer\":\"ACME\"}"
+          }
+        }
+      ],
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The tool call timed out. Let me check whether the invoice was actually created by listing the invoices for ACME.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "8332d785-5311-9644-b7d3-9f454c4490bf_0",
+      "content": "{\"items\":[{\"id\":\"INV-1\",\"customer\":\"ACME\",\"amount_chf\":120}]}"
+    },
+    {
+      "role": "assistant",
+      "content": "Die Rechnung wurde erfolgreich erstellt: **INV-1** für Kunde ACME über 120 CHF. (Der erste Aufruf lieferte zwar einen Timeout-Fehler, die Rechnung wurde aber bestätigt im System gefunden.)\n\n{\"status\":\"success\"}",
+      "refusal": null,
+      "reasoning": "The invoice was actually created despite the timeout error. Invoice INV-1 for ACME, 120 CHF exists. The task is complete.\n",
+      "reasoning_details": [
+        {
+          "type": "reasoning.text",
+          "text": "The invoice was actually created despite the timeout error. Invoice INV-1 for ACME, 120 CHF exists. The task is complete.\n",
+          "format": "unknown",
+          "index": 0
+        }
+      ]
+    }
+  ],
+  "log": [
+    {
+      "tool": "create_invoice",
+      "key": "create_invoice[[\"amount_chf\",120],[\"customer\",\"ACME\"]]",
+      "read": false,
+      "error": "ambiguous"
+    },
+    {
+      "tool": "list_invoices",
+      "key": "list_invoices[[\"customer\",\"ACME\"]]",
+      "read": true,
+      "error": null
+    }
+  ],
+  "mock_state": {
+    "invoices": [
+      {
+        "id": "INV-1",
+        "customer": "ACME",
+        "amount_chf": 120
+      }
+    ],
+    "emails": [],
+    "tickets": [],
+    "orders": []
+  }
+}
