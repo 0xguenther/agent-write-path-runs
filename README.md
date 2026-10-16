@@ -29,6 +29,14 @@ Raw data behind the posts about AI agents duplicating writes after timeouts.
 | R6 | Claude Haiku 4.5 | 60 | 20 | 10 | 20 | USD 0.35 |
 | R3 | Ornith 1.5 35B | 49 | 36 | 38 | 38 | free |
 
+## Write-ups
+- [500 agent runs: how often does an AI agent write twice after a timeout?](https://0xguenther.org/en/agent-write-path-research.html): table, method, limits, FAQ
+- [What does an AI agent do when the reply to a write is lost? 90 runs per model, three behaviours](https://0xguenther.org/en/agent-lost-reply-after-write.html)
+- [Will an AI agent notice when a tool says ok but nothing was created? Only 1 of 50 runs ended correctly](https://0xguenther.org/en/agent-false-success-tool-says-ok.html)
+- [Do AI agents retry after a 429 or 503? Two of five models gave up after one call, every time](https://0xguenther.org/en/agent-rate-limit-retry-behavior.html)
+- [Chained tool calls: the invoice times out and the email needs its number. Two models duplicated the invoice in 10 of 10 runs](https://0xguenther.org/en/agent-chained-tool-calls-duplicate-invoice.html)
+- [Malformed replies and wrong IDs: all five models handled 100 of 100 runs](https://0xguenther.org/en/agent-malformed-reply-wrong-id.html)
+
 ## Limits
 Mock tools, synthetic cases, one prompt. This describes behaviour in this harness, not a general model ranking. With n=100 per route the 95% intervals are roughly +/-6 to 10 points. Better prompts change these numbers a lot.
 
