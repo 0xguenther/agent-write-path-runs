@@ -31,7 +31,7 @@ Raw data behind the posts about AI agents duplicating writes after timeouts.
 
 ## Write-ups
 - [500 agent runs: how often does an AI agent write twice after a timeout?](https://0xguenther.org/en/agent-write-path-research.html): table, method, limits, FAQ
-- [What does an AI agent do when the reply to a write is lost? 90 runs per model, three behaviours](https://0xguenther.org/en/agent-lost-reply-after-write.html)
+- [What does an AI agent do when the reply to a write is lost? 30 runs per model, three behaviours](https://0xguenther.org/en/agent-lost-reply-after-write.html)
 - [Will an AI agent notice when a tool says ok but nothing was created? Only 1 of 50 runs ended correctly](https://0xguenther.org/en/agent-false-success-tool-says-ok.html)
 - [Do AI agents retry after a 429 or 503? Two of five models gave up after one call, every time](https://0xguenther.org/en/agent-rate-limit-retry-behavior.html)
 - [Chained tool calls: the invoice times out and the email needs its number. Two models duplicated the invoice in 10 of 10 runs](https://0xguenther.org/en/agent-chained-tool-calls-duplicate-invoice.html)
